@@ -1,0 +1,31 @@
+Item
+-----------------------------------------
+	- sku: string 12
+	- name: string
+	- price: decimal
+	- taxCategory: enum TaxCategory
+
+enum TaxCategory
+-----------------------------------------
+	- g: groceries
+	- pf: prepared food
+	- pd: prescription drug
+	- nd: non prescription drug
+	- c: clothing
+	- o: other
+	
+enum SalesTax
+-----------------------------------------
+	- state: 	6.3%
+	- county: 	0.7%
+	- city:		2.0%
+	
+	
+
+Execution
+=========
+
+1. Load data from csv file (well-formed)
+2. 
+	
+	
