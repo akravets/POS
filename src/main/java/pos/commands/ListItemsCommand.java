@@ -1,15 +1,16 @@
 package pos.commands;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Component;
 import pos.POSHelper;
 import pos.services.POSService;
 
-public class ListItemsCommand implements Command {
-    @Autowired
-    POSService service;
-
-    @Autowired
-    POSHelper posHelper;
+@Component
+public class ListItemsCommand extends AbstractCommand {
+    public ListItemsCommand(POSService service, POSHelper posHelper){
+        super(service, posHelper);
+    }
 
     @Override
     public void execute() {
