@@ -1,5 +1,7 @@
 package pos.commands;
 
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -14,6 +16,7 @@ public class CommandProvider {
      */
     public CommandProvider(Set<Command> commandSet){
         this.commandSet = commandSet;
+
     }
 
     /**
@@ -22,5 +25,14 @@ public class CommandProvider {
      */
     public Set<Command> getcommands() {
         return commandSet;
+    }
+
+    /**
+     * Given commandCode returns {@link Command} associated with this code
+     * @param commandCode Command code for which {@link Command} to be found
+     * @return Returns {@link Command} for <code>commandCode</code>
+     */
+    public Optional<Command> getCommandByCommandCode(String commandCode){
+        return commandSet.stream().filter(c -> c.getCommandCode().equals(commandCode)).findFirst();
     }
 }

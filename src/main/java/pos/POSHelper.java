@@ -21,10 +21,18 @@ public class POSHelper {
         Set<Command> commandSet = service.getCommands();
 
         System.out.println("POS Commands");
-        System.out.println("============");
+        System.out.println("============\n");
 
-        commandSet.forEach(commandEnum -> {
-            System.out.println(commandEnum.getName() + "\t" + commandEnum.getDescription() + "\t" + commandEnum.getCommandCode());
+        commandSet.forEach(c -> {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(c.getName());
+            buffer.append(" (");
+            buffer.append(c.getCommandCode());
+            buffer.append(")");
+
+            String partOne = String.format("%-" + 20 + "s", buffer.toString());
+
+            System.out.println(partOne + c.getDescription());
         });
     }
 }

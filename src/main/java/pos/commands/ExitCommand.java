@@ -5,7 +5,7 @@ import pos.models.CommandEnum;
 public class ExitCommand implements Command{
     @Override
     public void execute() {
-
+        return;
     }
 
     @Override
