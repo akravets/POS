@@ -1,8 +1,14 @@
 package pos.commands;
 
+import pos.POSHelper;
 import pos.models.CommandEnum;
+import pos.services.POSService;
 
-public class ExitCommand implements Command{
+public class ExitCommand extends AbstractCommand{
+    public ExitCommand(POSService service, POSHelper posHelper) {
+        super(service, posHelper);
+    }
+
     @Override
     public void execute() {
         return;

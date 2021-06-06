@@ -1,5 +1,8 @@
 package pos.commands;
 
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Component;
+
 /**
  * Interface describing a Command.
  * Command is a unit of execution in a terminal.

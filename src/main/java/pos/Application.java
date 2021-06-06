@@ -6,9 +6,13 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import pos.commands.AbstractCommand;
+import pos.commands.Command;
+import pos.commands.ListItemsCommand;
 import pos.services.POSService;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -28,18 +32,19 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String command;
+        String commandCode;
 
         posHelper.printAllCommands();
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Enter command to start: ");
-        while (!(command = input.nextLine()).equals("exit")){
-            log.info("Command entered: " + command);
-            switch (command){
+        System.out.println("Enter commandCode to start: ");
+        while (!(commandCode = input.nextLine()).equals("exit")){
+            log.info("Command entered: " + commandCode);
+            Optional<AbstractCommand> commandByCode = posService.getCommandByCode(commandCode);
+            Command command = commandByCode.orElse(new ListItemsCommand(posService, posHelper));
+            command.execute();
 
-            }
         }
     }
 }

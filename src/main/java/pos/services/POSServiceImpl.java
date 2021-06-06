@@ -4,6 +4,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import pos.commands.AbstractCommand;
 import pos.commands.Command;
 import pos.commands.CommandProvider;
 import pos.models.CommandEnum;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -32,7 +34,12 @@ public class POSServiceImpl implements POSService {
     }
 
     @Override
-    public Set<Command> getCommands() {
+    public Set<AbstractCommand> getCommands() {
         return commandProvider.getcommands();
+    }
+
+    @Override
+    public Optional<AbstractCommand> getCommandByCode(String commandCode) {
+        return Optional.empty();
     }
 }

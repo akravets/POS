@@ -1,6 +1,7 @@
 package pos;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pos.commands.AbstractCommand;
 import pos.commands.Command;
 import pos.services.POSService;
 
@@ -18,7 +19,7 @@ public class POSHelper {
     }
 
     public void printAllCommands(){
-        Set<Command> commandSet = service.getCommands();
+        Set<AbstractCommand> commandSet = service.getCommands();
 
         System.out.println("POS Commands");
         System.out.println("============\n");
