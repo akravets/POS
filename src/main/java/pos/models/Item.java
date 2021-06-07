@@ -1,12 +1,15 @@
 package pos.models;
 
 import com.opencsv.bean.CsvBindByPosition;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 
 /**
  * POJO that describes POS item
  */
 @NoArgsConstructor
+@Data
 public class Item {
     @CsvBindByPosition(position = 0)
     private String sku;
