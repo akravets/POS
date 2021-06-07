@@ -13,7 +13,7 @@ public class ListItemsCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute(String input) {
         posHelper.printAllCommands();
     }
 

@@ -1,7 +1,6 @@
 package pos.commands;
 
 import pos.POSHelper;
-import pos.models.CommandEnum;
 import pos.services.POSService;
 
 public class ExitCommand extends AbstractCommand{
@@ -10,7 +9,7 @@ public class ExitCommand extends AbstractCommand{
     }
 
     @Override
-    public void execute() {
+    public void execute(String input) {
         return;
     }
 
