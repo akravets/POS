@@ -45,4 +45,11 @@ public interface POSService {
      * @return Returns {@link Set} of {@link Item}s
      */
     public Set<Item> findItemBySKU(String sku);
+
+    /**
+     * Gets tax rate for jurisdiction
+     * @param jurisdiction
+     * @return Returns tax rate
+     */
+    public double getTaxRateByJurisdiction(String jurisdiction);
 }

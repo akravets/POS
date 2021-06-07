@@ -1,8 +1,10 @@
 package pos;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import pos.commands.AbstractCommand;
 import pos.commands.Command;
+import pos.models.TaxRate;
 import pos.services.POSService;
 
 import java.util.Set;
@@ -14,9 +16,10 @@ public class POSHelper {
     @Autowired
     private POSService service;
 
-    public POSHelper() {
+    @Autowired
+    private Environment environment;
 
-    }
+    public POSHelper() {}
 
     public void printAllCommands(){
         Set<AbstractCommand> commandSet = service.getCommands();
@@ -35,5 +38,9 @@ public class POSHelper {
 
             System.out.println(partOne + c.getDescription());
         });
+    }
+
+    public double getTaxRateForTaxRateEnum(TaxRate taxRateEnum) throws NumberFormatException{
+        return Double.valueOf(environment.getProperty("pos.tax-rate:" + taxRateEnum.getName()));
     }
 }
