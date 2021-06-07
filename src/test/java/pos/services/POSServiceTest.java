@@ -60,7 +60,7 @@ public class POSServiceTest {
     }
 
     @Test
-    public void getTaxRateByJurisdicion_positiveMatch(){
+    public void getTaxRateByJurisdicion_positiveMatch() throws TaxRateNotFoundException {
         double rate = service.getTaxRateByJurisdiction("city");
         Assertions.assertEquals(rate, 2.0);
     }

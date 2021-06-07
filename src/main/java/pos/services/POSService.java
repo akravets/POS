@@ -3,7 +3,7 @@ package pos.services;
 import org.springframework.stereotype.Service;
 import pos.commands.AbstractCommand;
 import pos.commands.Command;
-import pos.models.CommandEnum;
+import pos.exception.TaxRateNotFoundException;
 import pos.models.Item;
 
 import java.io.IOException;
@@ -51,5 +51,5 @@ public interface POSService {
      * @param jurisdiction
      * @return Returns tax rate
      */
-    public double getTaxRateByJurisdiction(String jurisdiction);
+    public double getTaxRateByJurisdiction(String jurisdiction) throws TaxRateNotFoundException;
 }

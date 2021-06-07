@@ -2,6 +2,7 @@ package pos.commands;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
+import pos.exception.CommandException;
 
 /**
  * Interface describing a Command.
@@ -11,7 +12,7 @@ public interface Command {
     /**
      * Executes this {@link Command}
      */
-    public void execute();
+    public void execute() throws CommandException;
 
     /**
      * Name of the {@link Command}

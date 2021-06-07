@@ -2,16 +2,16 @@ package pos.services;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import pos.POSHelper;
 import pos.commands.AbstractCommand;
-import pos.commands.Command;
 import pos.commands.CommandProvider;
+import pos.commands.SKULookupCommand;
 import pos.exception.TaxRateNotFoundException;
-import pos.models.CommandEnum;
 import pos.models.Item;
 import pos.models.TaxRate;
 
@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,8 +49,11 @@ public class POSServiceImpl implements POSService {
     }
 
     @Override
-    public Optional<AbstractCommand> getCommandByCode(String commandCode) {
-        return Optional.empty();
+    public Optional<AbstractCommand> getCommandByCode(String input) {
+        if(StringUtils.isNumeric(input)){
+            return Optional.of(new SKULookupCommand(this, posHelper, input));
+        }
+        return commandProvider.getCommandByCommandCode(input);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class POSServiceImpl implements POSService {
     }
 
     @Override
-    public double getTaxRateByJurisdiction(String jurisdiction) throws NumberFormatException {
+    public double getTaxRateByJurisdiction(String jurisdiction) throws NumberFormatException, TaxRateNotFoundException {
         Optional<TaxRate> taxRate = Arrays.stream(TaxRate.values()).filter(t -> t.getName().equals(jurisdiction)).findFirst();
         TaxRate rate = taxRate.orElseThrow(() -> new TaxRateNotFoundException(jurisdiction));
         return Double.valueOf(environment.getProperty("pos.taxRate." + rate.getName()));
