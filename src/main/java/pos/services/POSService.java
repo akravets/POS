@@ -3,12 +3,13 @@ package pos.services;
 import org.springframework.stereotype.Service;
 import pos.commands.AbstractCommand;
 import pos.commands.Command;
-import pos.models.CommandEnum;
+import pos.exception.TaxRateNotFoundException;
 import pos.models.Item;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public interface POSService {
      * Gets {@link Set} of {@link Command}s
      * @return Returns {@link Command}s
      */
-    public Set<AbstractCommand> getCommands();
+    public Map<String,AbstractCommand> getCommands();
 
     /**
      * Given <code>commandCode</code> returns its {@link Command}
@@ -51,5 +52,5 @@ public interface POSService {
      * @param jurisdiction
      * @return Returns tax rate
      */
-    public double getTaxRateByJurisdiction(String jurisdiction);
+    public double getTaxRateByJurisdiction(String jurisdiction) throws TaxRateNotFoundException;
 }

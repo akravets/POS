@@ -7,6 +7,7 @@ import pos.commands.Command;
 import pos.models.TaxRate;
 import pos.services.POSService;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,15 +20,16 @@ public class POSHelper {
     @Autowired
     private Environment environment;
 
-    public POSHelper() {}
+    public POSHelper() {
+    }
 
-    public void printAllCommands(){
-        Set<AbstractCommand> commandSet = service.getCommands();
+    public void printAllCommands() {
+        Map<String, AbstractCommand> commandMap = service.getCommands();
 
         System.out.println("POS Commands");
         System.out.println("============\n");
 
-        commandSet.forEach(c -> {
+        commandMap.values().stream().forEach(c -> {
             StringBuffer buffer = new StringBuffer();
             buffer.append(c.getName());
             buffer.append(" (");
@@ -40,7 +42,7 @@ public class POSHelper {
         });
     }
 
-    public double getTaxRateForTaxRateEnum(TaxRate taxRateEnum) throws NumberFormatException{
+    public double getTaxRateForTaxRateEnum(TaxRate taxRateEnum) throws NumberFormatException {
         return Double.valueOf(environment.getProperty("pos.tax-rate:" + taxRateEnum.getName()));
     }
 }
