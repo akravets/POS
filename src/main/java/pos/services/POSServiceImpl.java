@@ -3,13 +3,17 @@ package pos.services;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import pos.POSHelper;
 import pos.commands.AbstractCommand;
 import pos.commands.Command;
 import pos.commands.CommandProvider;
+import pos.exception.TaxRateNotFoundException;
 import pos.models.CommandEnum;
 import pos.models.Item;
+import pos.models.TaxRate;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +30,12 @@ import java.util.stream.Collectors;
 public class POSServiceImpl implements POSService {
     @Autowired
     public CommandProvider commandProvider;
+
+    @Autowired
+    public POSHelper posHelper;
+    
+    @Autowired
+    Environment environment;
 
     @Override
     public List<Item> getItems() throws URISyntaxException, IOException {
@@ -54,5 +64,12 @@ public class POSServiceImpl implements POSService {
             log.error("Error finding sku " + sku, e);
             return Collections.emptySet();
         }
+    }
+
+    @Override
+    public double getTaxRateByJurisdiction(String jurisdiction) throws NumberFormatException {
+        Optional<TaxRate> taxRate = Arrays.stream(TaxRate.values()).filter(t -> t.getName().equals(jurisdiction)).findFirst();
+        TaxRate rate = taxRate.orElseThrow(() -> new TaxRateNotFoundException(jurisdiction));
+        return Double.valueOf(environment.getProperty("pos.taxRate." + rate.getName()));
     }
 }

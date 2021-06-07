@@ -1,6 +1,7 @@
 package pos.services;
 
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pos.Application;
 import pos.commands.AbstractCommand;
+import pos.exception.TaxRateNotFoundException;
 import pos.models.Item;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -54,5 +57,18 @@ public class POSServiceTest {
     public void findItemBySKU_withNoMatches(){
         final Set<Item> items = service.findItemBySKU(String.valueOf(Integer.MIN_VALUE));
         assertEquals(items.size(), 0);
+    }
+
+    @Test
+    public void getTaxRateByJurisdicion_positiveMatch(){
+        double rate = service.getTaxRateByJurisdiction("city");
+        Assertions.assertEquals(rate, 2.0);
+    }
+
+    @Test
+    public void getTaxRateByJurisdicion_negativeMatch(){
+        Assertions.assertThrows(TaxRateNotFoundException.class, () -> {
+            service.getTaxRateByJurisdiction(UUID.randomUUID().toString());
+        });
     }
 }
