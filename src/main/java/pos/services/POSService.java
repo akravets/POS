@@ -9,6 +9,7 @@ import pos.models.Item;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public interface POSService {
      * Gets {@link Set} of {@link Command}s
      * @return Returns {@link Command}s
      */
-    public Set<AbstractCommand> getCommands();
+    public Map<String,AbstractCommand> getCommands();
 
     /**
      * Given <code>commandCode</code> returns its {@link Command}

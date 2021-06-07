@@ -44,15 +44,12 @@ public class POSServiceImpl implements POSService {
     }
 
     @Override
-    public Set<AbstractCommand> getCommands() {
+    public Map<String, AbstractCommand> getCommands() {
         return commandProvider.getcommands();
     }
 
     @Override
     public Optional<AbstractCommand> getCommandByCode(String input) {
-        if(StringUtils.isNumeric(input)){
-            return Optional.of(new SKULookupCommand(this, posHelper, input));
-        }
         return commandProvider.getCommandByCommandCode(input);
     }
 

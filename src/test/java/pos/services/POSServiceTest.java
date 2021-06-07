@@ -15,6 +15,7 @@ import pos.models.Item;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class POSServiceTest {
 
     @Test
     public void getCommands() {
-        final Set<AbstractCommand> commands = service.getCommands();
+        final Map<String,AbstractCommand> commands = service.getCommands();
         assertEquals(commands.size(), 2);
     }
 

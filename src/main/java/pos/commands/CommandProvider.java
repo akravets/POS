@@ -1,30 +1,30 @@
 package pos.commands;
 
-import java.util.HashMap;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Provides access to available {@link Command}s
  */
 public class CommandProvider {
-    Set<AbstractCommand> commandSet;
+    Map<String, AbstractCommand> commandMap;
 
     /**
      * Constructor
-     * @param commandSet {@link Set} of {@link Command}s
+     * @param commandMap {@link Map} of {@link Command} and its code
      */
-    public CommandProvider(Set<AbstractCommand> commandSet){
-        this.commandSet = commandSet;
-
+    public CommandProvider(Map<String, AbstractCommand> commandMap){
+        this.commandMap = commandMap;
     }
 
     /**
-     * Set of commands
-     * @return Returns {@link Set} of {@link Command}s
+     * Map of commands
+     * @return Returns {@link Map} of {@link Command} and its code
      */
-    public Set<AbstractCommand> getcommands() {
-        return commandSet;
+    public Map<String, AbstractCommand> getcommands() {
+        return commandMap;
     }
 
     /**
@@ -33,6 +33,9 @@ public class CommandProvider {
      * @return Returns {@link Command} for <code>commandCode</code>
      */
     public Optional<AbstractCommand> getCommandByCommandCode(String commandCode){
-        return commandSet.stream().filter(c -> c.getCommandCode().equals(commandCode)).findFirst();
+        if(StringUtils.isNumeric(commandCode)){
+            return Optional.of(commandMap.get("*"));
+        }
+        return Optional.ofNullable(commandMap.get(commandCode));
     }
 }

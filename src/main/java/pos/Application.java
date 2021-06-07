@@ -1,6 +1,8 @@
 package pos;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.exceptionhandler.CsvExceptionHandler;
+import com.opencsv.exceptions.CsvException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,10 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 @SpringBootApplication
 @Slf4j
@@ -58,23 +57,38 @@ public class Application implements CommandLineRunner {
         Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
 
         Reader reader = Files.newBufferedReader(Paths.get(copyFile.toURI()));
-        List parse = new CsvToBeanBuilder(reader).withType(Item.class).build().parse();
+
+        Set<CsvException> exceptionSet = new LinkedHashSet<>();
+
+        List parse = new CsvToBeanBuilder(reader).withExceptionHandler(new CsvExceptionHandler() {
+            @Override
+            public CsvException handleException(CsvException e) throws CsvException {
+                exceptionSet.add(e);
+                return new CsvException(e.getMessage());
+            }
+        }).withType(Item.class).build().parse();
+
+        if(exceptionSet.size() != 0){
+            System.out.println("Following errors occured while loading data:\n");
+            for (CsvException csvException : exceptionSet) {
+                System.out.println(csvException.toString());
+            }
+            System.out.println();
+        }
 
         posHelper.printAllCommands();
 
-        System.out.println("Enter commandCode to start: ");
+        System.out.print("\nEnter commandCode to start: ");
 
-        String commandCode;
-
-        Scanner input = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         while (true){
-            commandCode = input.nextLine();
-            log.debug("Command entered: " + commandCode);
-            Optional<AbstractCommand> commandByCode = posService.getCommandByCode(commandCode);
+            String input = scanner.nextLine();
+            log.debug("Command entered: " + input);
+            Optional<AbstractCommand> commandByCode = posService.getCommandByCode(input);
             Command command = commandByCode.orElse(new ListItemsCommand(posService, posHelper));
             try{
-                command.execute();
+                command.execute(input);
             } catch (CommandException e){
                 System.out.println(e.getMessage());
                 continue;

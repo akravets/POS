@@ -12,7 +12,7 @@ public interface Command {
     /**
      * Executes this {@link Command}
      */
-    public void execute() throws CommandException;
+    public void execute(String input) throws CommandException;
 
     /**
      * Name of the {@link Command}

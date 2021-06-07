@@ -5,8 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pos.POSHelper;
 import pos.commands.*;
+import pos.models.Purchase;
 import pos.services.POSService;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,15 +18,24 @@ public class POSConfiguration {
     @Autowired
     POSService posService;
 
+    @Autowired
+    Purchase purchase;
+
     @Bean
     public CommandProvider getCommandProvider() {
-        Set<AbstractCommand> commandSet = new LinkedHashSet<>();
-        commandSet.add(new ExitCommand(posService, getPOSHelper()));
-        commandSet.add(new ListItemsCommand(posService, getPOSHelper()));
+        HashMap<String, AbstractCommand> commandMap = new LinkedHashMap<>();
 
-        CommandProvider provider = new CommandProvider(commandSet);
+        AbstractCommand exitCommand = new ExitCommand(posService, getPOSHelper());
+        AbstractCommand listCommand = new ListItemsCommand(posService, getPOSHelper());
+        AbstractCommand skuLookupCommand = new SKULookupCommand(posService, getPOSHelper(), purchase);
+        AbstractCommand totalCommand = new TotalCommand(posService, getPOSHelper(), purchase);
 
-        return provider;
+        commandMap.put(exitCommand.getCommandCode(), exitCommand);
+        commandMap.put(listCommand.getCommandCode(), listCommand);
+        commandMap.put(skuLookupCommand.getCommandCode(), skuLookupCommand);
+        commandMap.put(totalCommand.getCommandCode(), totalCommand);
+
+        return new CommandProvider(commandMap);
     }
 
     @Bean
