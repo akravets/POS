@@ -32,7 +32,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String commandCode;
+        /*String commandCode;
 
         posHelper.printAllCommands();
 
@@ -45,7 +45,7 @@ public class Application implements CommandLineRunner {
             Command command = commandByCode.orElse(new ListItemsCommand(posService, posHelper));
             command.execute();
 
-        }
+        }*/
     }
 }
 

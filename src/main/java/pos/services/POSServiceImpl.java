@@ -1,6 +1,7 @@
 package pos.services;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -16,12 +17,12 @@ import java.io.Reader;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class POSServiceImpl implements POSService {
     @Autowired
     public CommandProvider commandProvider;
@@ -41,5 +42,17 @@ public class POSServiceImpl implements POSService {
     @Override
     public Optional<AbstractCommand> getCommandByCode(String commandCode) {
         return Optional.empty();
+    }
+
+    @Override
+    public Set<Item> findItemBySKU(String sku) {
+        try {
+            return getItems().stream().filter(x -> {
+                return x.getSku().startsWith(sku);
+            }).collect(Collectors.toSet());
+        } catch (URISyntaxException | IOException e) {
+            log.error("Error finding sku " + sku, e);
+            return Collections.emptySet();
+        }
     }
 }
