@@ -1,19 +1,19 @@
 package pos.services;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import pos.POSHelper;
 import pos.commands.AbstractCommand;
-import pos.commands.CommandProvider;
-import pos.commands.SKULookupCommand;
+import pos.provider.CommandProvider;
 import pos.exception.TaxRateNotFoundException;
 import pos.models.Item;
 import pos.models.TaxRate;
+import pos.provider.DataProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +36,12 @@ public class POSServiceImpl implements POSService {
     @Autowired
     Environment environment;
 
+    @Autowired
+    DataProvider dataProvider;
+
     @Override
     public List<Item> getItems() throws URISyntaxException, IOException {
-        File dataFile = ResourceUtils.getFile("classpath:data.csv");
-        Reader reader = Files.newBufferedReader(Paths.get(dataFile.toURI()));
-        return new CsvToBeanBuilder(reader).withType(Item.class).build().parse();
+        return dataProvider.getItems();
     }
 
     @Override

@@ -16,6 +16,7 @@ import pos.commands.Command;
 import pos.commands.ListItemsCommand;
 import pos.exception.CommandException;
 import pos.models.Item;
+import pos.provider.DataProvider;
 import pos.services.POSService;
 
 import java.io.File;
@@ -33,6 +34,8 @@ public class Application implements CommandLineRunner {
     POSService posService;
     @Autowired
     POSHelper posHelper;
+    @Autowired
+    DataProvider dataProvider;
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(Application.class);
@@ -50,17 +53,17 @@ public class Application implements CommandLineRunner {
         final String dataFile = args[0];
         File file = new FileSystemResource(dataFile).getFile();
 
-        File copyFile = new File(getClass().getClassLoader().getResource(".").getFile() + file.getName());
+    /*    File copyFile = new File(getClass().getClassLoader().getResource(".").getFile() + file.getName());
 
         Path copied = copyFile.toPath();
         Path originalPath = file.toPath();
-        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);*/
 
-        Reader reader = Files.newBufferedReader(Paths.get(copyFile.toURI()));
+        Reader reader = Files.newBufferedReader(Paths.get(file.toURI()));
 
         Set<CsvException> exceptionSet = new LinkedHashSet<>();
 
-        List parse = new CsvToBeanBuilder(reader).withExceptionHandler(new CsvExceptionHandler() {
+        List<Item> items = new CsvToBeanBuilder(reader).withExceptionHandler(new CsvExceptionHandler() {
             @Override
             public CsvException handleException(CsvException e) throws CsvException {
                 exceptionSet.add(e);
@@ -68,13 +71,16 @@ public class Application implements CommandLineRunner {
             }
         }).withType(Item.class).build().parse();
 
+
         if(exceptionSet.size() != 0){
-            System.out.println("Following errors occured while loading data:\n");
+            System.out.println("Following warnings occurred while loading data:\n");
             for (CsvException csvException : exceptionSet) {
-                System.out.println(csvException.toString());
+                System.out.println("\t"+csvException.toString());
             }
-            System.out.println();
+            System.out.println("\nBad data was removed during import\n");
         }
+
+        dataProvider.setItems(items);
 
         posHelper.printAllCommands();
 
@@ -94,19 +100,6 @@ public class Application implements CommandLineRunner {
                 continue;
             }
         }
-
-      /*  while (!(commandCode = input.nextLine()).equals("exit")){
-            log.debug("Command entered: " + commandCode);
-            Optional<AbstractCommand> commandByCode = posService.getCommandByCode(commandCode);
-            Command command = commandByCode.orElse(new ListItemsCommand(posService, posHelper));
-            try{
-                command.execute();
-            } catch (CommandException e){
-                System.out.println(e.getMessage());
-                continue;
-            }
-
-        } */
     }
 }
 

@@ -1,6 +1,8 @@
-package pos.commands;
+package pos.provider;
 
 import org.apache.commons.lang3.StringUtils;
+import pos.commands.AbstractCommand;
+import pos.commands.Command;
 
 import java.util.Map;
 import java.util.Optional;

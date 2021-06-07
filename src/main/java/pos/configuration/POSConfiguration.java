@@ -6,12 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import pos.POSHelper;
 import pos.commands.*;
 import pos.models.Purchase;
+import pos.provider.CommandProvider;
+import pos.provider.DataProvider;
 import pos.services.POSService;
 
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Configuration
 public class POSConfiguration {
@@ -41,5 +42,10 @@ public class POSConfiguration {
     @Bean
     public POSHelper getPOSHelper() {
         return new POSHelper();
+    }
+
+    @Bean
+    public DataProvider getDataProvider() {
+        return new DataProvider();
     }
 }
