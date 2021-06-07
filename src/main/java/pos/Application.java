@@ -53,12 +53,6 @@ public class Application implements CommandLineRunner {
         final String dataFile = args[0];
         File file = new FileSystemResource(dataFile).getFile();
 
-    /*    File copyFile = new File(getClass().getClassLoader().getResource(".").getFile() + file.getName());
-
-        Path copied = copyFile.toPath();
-        Path originalPath = file.toPath();
-        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);*/
-
         Reader reader = Files.newBufferedReader(Paths.get(file.toURI()));
 
         Set<CsvException> exceptionSet = new LinkedHashSet<>();
