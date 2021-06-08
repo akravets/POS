@@ -1,6 +1,6 @@
 package pos.commands;
 
-import pos.POSHelper;
+import pos.helpers.POSHelper;
 import pos.services.POSService;
 
 public class ExitCommand extends AbstractCommand{

@@ -5,7 +5,6 @@ import com.opencsv.bean.exceptionhandler.CsvExceptionHandler;
 import com.opencsv.exceptions.CsvException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +14,7 @@ import pos.commands.AbstractCommand;
 import pos.commands.Command;
 import pos.commands.ListItemsCommand;
 import pos.exception.CommandException;
+import pos.helpers.POSHelper;
 import pos.models.Item;
 import pos.provider.DataProvider;
 import pos.services.POSService;
@@ -22,9 +22,7 @@ import pos.services.POSService;
 import java.io.File;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @SpringBootApplication

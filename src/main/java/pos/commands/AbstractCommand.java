@@ -1,7 +1,7 @@
 package pos.commands;
 
 import lombok.extern.slf4j.Slf4j;
-import pos.POSHelper;
+import pos.helpers.POSHelper;
 import pos.services.POSService;
 
 @Slf4j

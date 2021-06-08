@@ -1,9 +1,7 @@
 package pos.commands;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
-import pos.POSHelper;
+import pos.helpers.POSHelper;
 import pos.services.POSService;
 
 @Component

@@ -7,14 +7,16 @@ import lombok.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Value
 @Component
 public class Purchase {
-    Set<Item> items;
+    List<Item> items;
 
     public Purchase() {
-        items = new LinkedHashSet<>();
+        items = new LinkedList<>();
     }
 }
