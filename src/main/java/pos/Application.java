@@ -45,11 +45,18 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if(args.length == 0){
+            log.warn("No data file specified on application start");
             System.out.println("CSV data file must be specified");
             return;
         }
         final String dataFile = args[0];
         File file = new FileSystemResource(dataFile).getFile();
+
+        if(!file.exists()){
+            log.debug("No data file at " + file.getAbsolutePath());
+            System.out.println("File not found at " + file.getAbsolutePath());
+            return;
+        }
 
         Reader reader = Files.newBufferedReader(Paths.get(file.toURI()));
 
@@ -66,8 +73,10 @@ public class Application implements CommandLineRunner {
 
         if(exceptionSet.size() != 0){
             System.out.println("Following warnings occurred while loading data:\n");
+            log.debug("Errors while parsing data file");
             for (CsvException csvException : exceptionSet) {
                 System.out.println("\t"+csvException.toString());
+                log.warn(csvException.toString());
             }
             System.out.println("\nBad data was removed during import\n");
         }
