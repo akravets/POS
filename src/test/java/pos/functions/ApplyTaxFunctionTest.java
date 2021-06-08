@@ -42,24 +42,24 @@ public class ApplyTaxFunctionTest {
     @Test
     public void testAppyTaxCityAndGroceryItem(){
         Double result = applyTaxFunction.apply(TaxRate.CITY, groceryItem);
-        Assertions.assertEquals(1.02, result.doubleValue());
+        Assertions.assertEquals(0.02, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxStateAndPreparedFoodItem(){
         Double result = applyTaxFunction.apply(TaxRate.STATE, preparedFoodItem);
-        Assertions.assertEquals(1.07, result.doubleValue());
+        Assertions.assertEquals(0.07, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxCountyAndPreparedFoodItem(){
         Double result = applyTaxFunction.apply(TaxRate.COUNTY, preparedFoodItem);
-        Assertions.assertEquals(1.01, result.doubleValue());
+        Assertions.assertEquals(0.01, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxCityAndPreparedFoodItem(){
         Double result = applyTaxFunction.apply(TaxRate.CITY, preparedFoodItem);
-        Assertions.assertEquals(1.02, result.doubleValue());
+        Assertions.assertEquals(0.02, result.doubleValue());
     }
 }
