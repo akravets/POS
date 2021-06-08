@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.FileSystemResource;
 import pos.commands.AbstractCommand;
 import pos.commands.Command;
+import pos.commands.ExitCommand;
 import pos.commands.ListItemsCommand;
 import pos.exception.CommandException;
 import pos.helpers.POSHelper;
@@ -95,9 +96,13 @@ public class Application implements CommandLineRunner {
             Optional<AbstractCommand> commandByCode = posService.getCommandByCode(input);
             Command command = commandByCode.orElse(new ListItemsCommand(posService, posHelper));
             try{
+                if(command instanceof ExitCommand){
+                    break;
+                }
                 command.execute(input);
             } catch (CommandException e){
                 System.out.println(e.getMessage());
+                log.warn("Exception while getting input from user " + e.getMessage());
                 continue;
             }
         }
