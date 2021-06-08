@@ -9,6 +9,8 @@ import pos.services.POSService;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import java.util.Set;
  */
 public class POSHelper {
     private final DecimalFormat df;
+    private final NumberFormat nf;
     @Autowired
     private POSService service;
 
@@ -24,8 +27,16 @@ public class POSHelper {
     private Environment environment;
 
     public POSHelper() {
-        df = new DecimalFormat("#.##");
+        df = new DecimalFormat("#.00");
         df.setRoundingMode(RoundingMode.CEILING);
+
+        Locale locale = Locale.ENGLISH;
+
+        nf = NumberFormat.getNumberInstance(locale);
+// for trailing zeros:
+        nf.setMinimumFractionDigits(2);
+// round to 2 digits:
+        nf.setMaximumFractionDigits(2);
     }
 
     /**
@@ -55,7 +66,11 @@ public class POSHelper {
      * @param price Price to be formatted
      * @return Returns formatted price
      */
-    public double formatPrice(double price){
-       return Double.valueOf(df.format(price));
+    public String formatPrice(double price){
+       return nf.format(price);
+    }
+
+    public String pad(int padding, String value){
+        return String.format("%-" + padding + "s", value);
     }
 }
