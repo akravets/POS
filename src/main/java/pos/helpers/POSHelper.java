@@ -18,24 +18,14 @@ import java.util.Set;
  * Contains a set of helper methods that otherwise don't fit into specific category
  */
 public class POSHelper {
-    private final DecimalFormat df;
     private final NumberFormat nf;
     @Autowired
     private POSService service;
 
-    @Autowired
-    private Environment environment;
-
     public POSHelper() {
-        df = new DecimalFormat("#.00");
-        df.setRoundingMode(RoundingMode.CEILING);
-
         Locale locale = Locale.ENGLISH;
-
         nf = NumberFormat.getNumberInstance(locale);
-// for trailing zeros:
         nf.setMinimumFractionDigits(2);
-// round to 2 digits:
         nf.setMaximumFractionDigits(2);
     }
 
@@ -55,9 +45,10 @@ public class POSHelper {
             buffer.append(c.getCommandCode());
             buffer.append(")");
 
-            String partOne = String.format("%-" + 20 + "s", buffer.toString());
-
-            System.out.println(partOne + c.getDescription());
+            System.out.println(
+                    String.format("%-" + 20 + "s", buffer.toString()) +
+                    c.getDescription()
+            );
         });
     }
 
@@ -70,6 +61,13 @@ public class POSHelper {
        return nf.format(price);
     }
 
+    /**
+     * Pads given string
+     *
+     * @param padding Amount of padding
+     * @param value {@link String} to be padded
+     * @return
+     */
     public String pad(int padding, String value){
         return String.format("%-" + padding + "s", value);
     }

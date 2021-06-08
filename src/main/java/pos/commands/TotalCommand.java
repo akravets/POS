@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 @Slf4j
+/**
+ * Performs total command for transaction
+ */
 public class TotalCommand extends AbstractCommand {
     private final Purchase purchase;
 
@@ -32,6 +35,7 @@ public class TotalCommand extends AbstractCommand {
 
         if(items.size() == 0){
             System.out.println("There are no items to checkout");
+            log.debug("no items to checkout: Purchase.getItems() is empty");
             return;
         }
 
