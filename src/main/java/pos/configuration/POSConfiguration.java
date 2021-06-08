@@ -3,14 +3,13 @@ package pos.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pos.POSHelper;
+import pos.helpers.POSHelper;
 import pos.commands.*;
 import pos.models.Purchase;
 import pos.provider.CommandProvider;
 import pos.provider.DataProvider;
 import pos.services.POSService;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 

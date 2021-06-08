@@ -1,13 +1,10 @@
 package pos.services;
 
-import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
-import pos.POSHelper;
+import pos.helpers.POSHelper;
 import pos.commands.AbstractCommand;
 import pos.provider.CommandProvider;
 import pos.exception.TaxRateNotFoundException;
@@ -15,12 +12,8 @@ import pos.models.Item;
 import pos.models.TaxRate;
 import pos.provider.DataProvider;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 

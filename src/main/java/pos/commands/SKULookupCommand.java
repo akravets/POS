@@ -1,8 +1,7 @@
 package pos.commands;
 
 import lombok.extern.slf4j.Slf4j;
-import pos.POSHelper;
-import pos.exception.CommandException;
+import pos.helpers.POSHelper;
 import pos.exception.SKUNotFoundException;
 import pos.models.Item;
 import pos.models.Purchase;
