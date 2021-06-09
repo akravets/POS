@@ -19,6 +19,7 @@ import pos.helpers.POSHelper;
 import pos.models.Item;
 import pos.provider.DataProvider;
 import pos.services.POSService;
+import pos.utils.POSUtility;
 
 import java.io.File;
 import java.io.Reader;
@@ -83,7 +84,7 @@ public class Application implements CommandLineRunner {
             System.out.println("\nBad data was removed during import\n");
         }
 
-        Map<String, List<Item>> data = items.stream().collect(Collectors.groupingBy(s -> s.getSku().substring(0, 3)));
+        Map<String, List<Item>> data = POSUtility.groupData(items);
 
         dataProvider.setItems(data);
 
@@ -95,15 +96,18 @@ public class Application implements CommandLineRunner {
 
         while (true){
             String input = scanner.nextLine();
+
             log.debug("Command entered: " + input);
+
             Optional<AbstractCommand> commandByCode = posService.getCommandByCode(input);
             Command command = commandByCode.orElse(new ListItemsCommand(posService, posHelper));
+
             try{
                 if(command instanceof ExitCommand){
                     break;
                 }
                 command.execute(input);
-            } catch (CommandException e){
+            } catch (CommandException | IllegalArgumentException e){
                 System.out.println(e.getMessage());
                 log.warn("Exception while getting input from user " + e.getMessage());
                 continue;

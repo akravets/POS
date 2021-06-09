@@ -8,6 +8,7 @@ import pos.models.Purchase;
 import pos.services.POSService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -22,14 +23,21 @@ public class SKULookupCommand extends AbstractCommand {
 
     @Override
     public void execute(String input) throws SKUNotFoundException {
-        List<Item> items = service.findItemBySKU(input);
+        if(input.length() < 3){
+            throw new IllegalArgumentException("SKU length must be at least 3 characters");
+        }
+        Optional<List<Item>> items = service.findItemBySKU(input);
 
-        if(items.size() == 0){
+        items.orElseThrow(() -> new SKUNotFoundException(input));
+
+        final List<Item> itemList = items.get();
+
+        if(itemList.size() == 0){
             throw new SKUNotFoundException(input);
         }
-        else if(items.size() > 1){
+        else if(itemList.size() > 1){
             System.out.println("Mulitple SKUs found, pick one:\n");
-            items.forEach(i -> {
+            itemList.forEach(i -> {
                 System.out.print(posHelper.pad(20, i.getSku()));
                 System.out.println(i.getName());
             });
@@ -37,7 +45,7 @@ public class SKULookupCommand extends AbstractCommand {
         else {
             System.out.println("\nItem added:");
 
-            final Item item = items.get(0);
+            final Item item = itemList.get(0);
             System.out.print(posHelper.pad(20, item.getSku()));
             System.out.println(item.getPrice());
 

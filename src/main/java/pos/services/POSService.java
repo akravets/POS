@@ -5,13 +5,11 @@ import pos.commands.AbstractCommand;
 import pos.commands.Command;
 import pos.exception.TaxRateNotFoundException;
 import pos.models.Item;
+import pos.models.TaxRate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Service that exposes various interactions with POS data
@@ -45,12 +43,27 @@ public interface POSService {
      * @param sku SKU or partial SKU for which {@link Item}s to be returned
      * @return Returns {@link List} of {@link Item}s
      */
-    public List<Item> findItemBySKU(String sku);
+    public Optional<List<Item>> findItemBySKU(String sku);
 
     /**
-     * Gets tax rate for jurisdiction
-     * @param jurisdiction
-     * @return Returns tax rate
+     * Applies tax rate as defined in {@link TaxRate} for each {@link Item} in <code>items</code>
+     * @param items {@link List} of {@link Item}s for which tax to be calculated
+     * @return Returns <code>Map<TaxRate, Double></code>
      */
-    public double getTaxRateByJurisdiction(String jurisdiction) throws TaxRateNotFoundException;
+    public Map<Item, Map<TaxRate, Double>> getTaxForEachItem(List<Item> items);
+
+    /**
+     * Combines tax for all items across all jurisdictions
+     * @param items <code>List</code> of {@link Item}s for which total tax to be calculated
+     * @return Returns combined tax
+     */
+    public double getTaxForAllItems(List<Item> items);
+
+    /**
+     * Groups total tax by jurisdiction across all items
+     * @param items items <code>List</code> of {@link Item}s for which total tax to be grouped
+     * @return Returns <code>Map</code> of <code>TaxRate</code> and <code>Double</code> where value is total tax of each
+     * jurisdiction across all items
+     */
+    public Map<TaxRate, Double> groupTotalTaxByJurisdiction(List<Item> items);
 }
