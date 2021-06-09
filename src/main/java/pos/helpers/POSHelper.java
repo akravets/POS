@@ -19,6 +19,7 @@ import java.util.Set;
  */
 public class POSHelper {
     private final NumberFormat nf;
+
     @Autowired
     private POSService service;
 

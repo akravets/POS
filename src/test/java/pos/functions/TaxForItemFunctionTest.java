@@ -7,14 +7,14 @@ import pos.models.Item;
 import pos.models.TaxCategory;
 import pos.models.TaxRate;
 
-public class ApplyTaxFunctionTest {
-    private static ApplyTaxFunction applyTaxFunction;
+public class TaxForItemFunctionTest {
+    private static TaxForItemFunction taxForItemFunction;
     private static Item groceryItem;
     private static Item preparedFoodItem;
 
     @BeforeAll
     public static void init(){
-        applyTaxFunction = new ApplyTaxFunction();
+        taxForItemFunction = new TaxForItemFunction();
 
         groceryItem = new Item();
         groceryItem.setName("groceryItem");
@@ -29,37 +29,37 @@ public class ApplyTaxFunctionTest {
 
     @Test
     public void testAppyTaxStateAndGroceryItem(){
-        Double result = applyTaxFunction.apply(TaxRate.STATE, groceryItem);
+        Double result = taxForItemFunction.apply(TaxRate.STATE, groceryItem);
         Assertions.assertEquals(1.00, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxCountyAndGroceryItem(){
-        Double result = applyTaxFunction.apply(TaxRate.COUNTY, groceryItem);
+        Double result = taxForItemFunction.apply(TaxRate.COUNTY, groceryItem);
         Assertions.assertEquals(1.00, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxCityAndGroceryItem(){
-        Double result = applyTaxFunction.apply(TaxRate.CITY, groceryItem);
+        Double result = taxForItemFunction.apply(TaxRate.CITY, groceryItem);
         Assertions.assertEquals(0.02, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxStateAndPreparedFoodItem(){
-        Double result = applyTaxFunction.apply(TaxRate.STATE, preparedFoodItem);
+        Double result = taxForItemFunction.apply(TaxRate.STATE, preparedFoodItem);
         Assertions.assertEquals(0.07, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxCountyAndPreparedFoodItem(){
-        Double result = applyTaxFunction.apply(TaxRate.COUNTY, preparedFoodItem);
+        Double result = taxForItemFunction.apply(TaxRate.COUNTY, preparedFoodItem);
         Assertions.assertEquals(0.01, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxCityAndPreparedFoodItem(){
-        Double result = applyTaxFunction.apply(TaxRate.CITY, preparedFoodItem);
+        Double result = taxForItemFunction.apply(TaxRate.CITY, preparedFoodItem);
         Assertions.assertEquals(0.02, result.doubleValue());
     }
 }
