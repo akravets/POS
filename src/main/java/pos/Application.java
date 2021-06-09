@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @Slf4j
@@ -82,7 +83,9 @@ public class Application implements CommandLineRunner {
             System.out.println("\nBad data was removed during import\n");
         }
 
-        dataProvider.setItems(items);
+        Map<String, List<Item>> data = items.stream().collect(Collectors.groupingBy(s -> s.getSku().substring(0, 3)));
+
+        dataProvider.setItems(data);
 
         posHelper.printAllCommands();
 

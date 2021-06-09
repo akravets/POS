@@ -24,7 +24,7 @@ public interface POSService {
      * @throws URISyntaxException
      * @throws IOException
      */
-    public List<Item> getItems() throws URISyntaxException, IOException;
+    public Map<String, List<Item>> getItems() throws URISyntaxException, IOException;
 
     /**
      * Gets {@link Set} of {@link Command}s
@@ -40,12 +40,12 @@ public interface POSService {
     public Optional<AbstractCommand> getCommandByCode(String commandCode);
 
     /**
-     * Returns either specific {@link Item} (in a {@link Set}) that matches this <code>sku</code>, or {@link Set}
+     * Returns either specific {@link Item} (in a {@link List}) that matches this <code>sku</code>, or {@link List}
      * of {@link Item}s if the sku entered is a partial sku
      * @param sku SKU or partial SKU for which {@link Item}s to be returned
-     * @return Returns {@link Set} of {@link Item}s
+     * @return Returns {@link List} of {@link Item}s
      */
-    public Set<Item> findItemBySKU(String sku);
+    public List<Item> findItemBySKU(String sku);
 
     /**
      * Gets tax rate for jurisdiction

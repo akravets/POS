@@ -7,6 +7,7 @@ import pos.models.Item;
 import pos.models.Purchase;
 import pos.services.POSService;
 
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -21,7 +22,8 @@ public class SKULookupCommand extends AbstractCommand {
 
     @Override
     public void execute(String input) throws SKUNotFoundException {
-        Set<Item> items = service.findItemBySKU(input);
+        List<Item> items = service.findItemBySKU(input);
+
         if(items.size() == 0){
             throw new SKUNotFoundException(input);
         }

@@ -33,7 +33,7 @@ public class POSServiceImpl implements POSService {
     DataProvider dataProvider;
 
     @Override
-    public List<Item> getItems() throws URISyntaxException, IOException {
+    public Map<String, List<Item>> getItems() throws URISyntaxException, IOException {
         return dataProvider.getItems();
     }
 
@@ -48,14 +48,27 @@ public class POSServiceImpl implements POSService {
     }
 
     @Override
-    public Set<Item> findItemBySKU(String sku) {
+    public List<Item> findItemBySKU(String sku) {
         try {
-            return getItems().stream().filter(x -> {
-                return x.getSku().startsWith(sku);
-            }).collect(Collectors.toSet());
+            Map<String, List<Item>> items = getItems();
+
+            // if sku entered is less than 12 characters, find our bucket by first 3 characters and return
+            // its list
+            if(sku.length() < 12){
+                return items.get(sku.substring(0,3));
+            }
+
+            // otherwise get list in our bucket
+            List<Item> itemList = items.get(sku.substring(0, 3));
+
+            // iterate through the list until we find our sku
+            return itemList.stream().
+                    filter(x -> x.equals(sku))
+                    .collect(Collectors.toList());
+
         } catch (URISyntaxException | IOException e) {
             log.error("Error finding sku " + sku, e);
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
     }
 
