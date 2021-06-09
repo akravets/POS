@@ -88,6 +88,7 @@ public class TotalCommand extends AbstractCommand {
         System.out.println(pad(20, "Payment Paid") + format(paymentAmount));
         System.out.println(pad(20, "Change Due") + format(paymentAmount - total));
 
+        purchase.getItems().clear();
     }
 
     private String format(double value){
