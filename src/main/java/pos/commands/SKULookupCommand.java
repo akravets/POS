@@ -30,18 +30,18 @@ public class SKULookupCommand extends AbstractCommand {
         else if(items.size() > 1){
             System.out.println("Mulitple SKUs found, pick one:\n");
             items.forEach(i -> {
-                System.out.print(String.format("%-" + 20 + "s", i.getSku()));
+                System.out.print(posHelper.pad(20, i.getSku()));
                 System.out.println(i.getName());
             });
         }
         else {
             System.out.println("\nItem added:");
-            items.forEach(i -> {
-                System.out.print(String.format("%-" + 20 + "s", i.getName()));
-                System.out.println(i.getPrice());
-            });
 
-            purchase.getItems().add(items.iterator().next());
+            final Item item = items.get(0);
+            System.out.print(posHelper.pad(20, item.getSku()));
+            System.out.println(item.getPrice());
+
+            purchase.getItems().add(item);
             System.out.println("\r\n");
             
         }

@@ -63,7 +63,7 @@ public class POSServiceImpl implements POSService {
 
             // iterate through the list until we find our sku
             return itemList.stream().
-                    filter(x -> x.equals(sku))
+                    filter(x -> x.getSku().equals(sku))
                     .collect(Collectors.toList());
 
         } catch (URISyntaxException | IOException e) {

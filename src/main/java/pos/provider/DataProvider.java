@@ -1,6 +1,7 @@
 package pos.provider;
 
 import lombok.Data;
+import org.springframework.stereotype.Repository;
 import pos.models.Item;
 
 import java.util.List;
