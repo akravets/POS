@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import pos.commands.*;
+import pos.exception.SKUNotFoundException;
 import pos.functions.TaxForItemFunction;
 import pos.models.Item;
 import pos.models.TaxCategory;
@@ -19,6 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -85,23 +87,14 @@ public class POSServiceTest {
         items.add(item2);
         items.add(item3);
 
-        Map<String, List<Item>> data = POSUtility.groupData(items);
+        Map<String, Map<String, Item>> data = POSUtility.groupData(items);
 
         when(posService.getItems()).thenReturn(data);
     }
 
     @Test
     public void getItems() throws URISyntaxException, IOException {
-        final Map<String, List<Item>> items = posService.getItems();
-
-        List<Item> finalList = new ArrayList<>();
-
-        // flat lists in items map into one list
-        for (List<Item> list : items.values()) {
-            list.stream()
-                    .forEach(finalList::add);
-        }
-
+        final Map<String, Map<String, Item>> items = posService.getItems();
         assertEquals(2, items.size());
     }
 
@@ -121,13 +114,17 @@ public class POSServiceTest {
     @Test
     public void findItemBySKU_withManyMatches(){
         when(posService.findItemBySKU("0284005")).thenCallRealMethod();
-        assertEquals(Arrays.asList(new Item[]{item1, item2}), posService.findItemBySKU("0284005").get());
+        assertEquals(2, posService.findItemBySKU("0284005").get().size());
     }
 
     @Test
     public void findItemBySKU_withNoMatches(){
         when(posService.findItemBySKU(String.valueOf(Integer.MIN_VALUE))).thenCallRealMethod();
-        assertEquals(Optional.empty(), posService.findItemBySKU(String.valueOf(Integer.MIN_VALUE)));
+
+        assertThrows(
+                SKUNotFoundException.class,
+                () -> posService.findItemBySKU(String.valueOf(Integer.MIN_VALUE))
+        );
     }
 
     @Test

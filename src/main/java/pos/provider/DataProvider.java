@@ -12,5 +12,5 @@ import java.util.Map;
  */
 @Data
 public class DataProvider {
-    private Map<String, List<Item>> items;
+    private Map<String, Map<String, Item>> items;
 }
