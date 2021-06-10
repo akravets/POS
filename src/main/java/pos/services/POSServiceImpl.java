@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -27,7 +28,7 @@ public class POSServiceImpl implements POSService {
     DataProvider dataProvider;
 
     @Override
-    public Map<String, Map<String, Item>> getItems() throws URISyntaxException, IOException {
+    public Map<String, List<Item>> getItems() throws URISyntaxException, IOException {
         return dataProvider.getItems();
     }
 
@@ -42,25 +43,23 @@ public class POSServiceImpl implements POSService {
     }
 
     @Override
-    public Optional<List<Item>> findItemBySKU(String sku) {
+    public Optional<List<Item>> findItemBySKU(String sku) throws SKUNotFoundException{
         try {
-            final Map<String, Map<String, Item>> items = getItems();
+            final  Map<String, List<Item>> items = getItems();
 
-            // if sku entered is less than 12 characters, find our bucket by first 3 characters and return
-            // its list
-            Map<String, Item> values = items.get(sku.substring(0, 3));
-
-            if(values == null){
-                throw new SKUNotFoundException(sku);
-            }
             if (sku.length() < 12) {
-                List<Item> list = new ArrayList<Item>(values.values());
-                return Optional.ofNullable(list);
+                return Optional.ofNullable(items.get(sku.substring(0, 3)));
             }
-            // otherwise get the Item directly
-            return Optional.of(Arrays.asList(new Item[]{values.get(sku)}));
+            // otherwise get list in our bucket
+            List<Item> itemList = items.get(sku.substring(0, 3));
+
+            // iterate through the list until we find our sku
+            return Optional.of(itemList.stream().
+                    filter(x -> x.getSku().equals(sku))
+                    .collect(Collectors.toList()));
+
         } catch (URISyntaxException | IOException e) {
-            log.error("Error finding sku " + sku, e);
+            log.debug("Error finding sku " + sku, e);
             return Optional.empty();
         }
     }

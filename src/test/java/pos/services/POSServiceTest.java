@@ -1,6 +1,7 @@
 package pos.services;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,7 +18,6 @@ import pos.utils.POSUtility;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -41,15 +41,15 @@ public class POSServiceTest {
     @BeforeAll
     public static void init() throws URISyntaxException, IOException {
         posService = mock(POSServiceImpl.class);
-        mockItems();
-        mockCommands();
+       mockItems();
+       mockCommands();
     }
 
     // mocks commands
     private static void mockCommands() {
         // should really better this, this looks bad. May be replace with builder
         AbstractCommand exitCommand = new ExitCommand(null,null);
-        AbstractCommand listCommand = new ListItemsCommand(null,null);
+        AbstractCommand listCommand = new ListPOSCommandsCommand(null,null);
         AbstractCommand skuLookupCommand = new SKULookupCommand(null,null, null);
         AbstractCommand totalCommand = new TotalCommand(null,null, null);
 
@@ -87,14 +87,22 @@ public class POSServiceTest {
         items.add(item2);
         items.add(item3);
 
-        Map<String, Map<String, Item>> data = POSUtility.groupData(items);
+        Map<String, List<Item>> data = POSUtility.groupData(items);
 
         when(posService.getItems()).thenReturn(data);
     }
 
     @Test
     public void getItems() throws URISyntaxException, IOException {
-        final Map<String, Map<String, Item>> items = posService.getItems();
+        final Map<String, List<Item>> items = posService.getItems();
+
+        List<Item> finalList = new ArrayList<>();
+
+        // flat lists in items map into one list
+        for (List<Item> list : items.values()) {
+            list.stream()
+                    .forEach(finalList::add);
+        }
         assertEquals(2, items.size());
     }
 
@@ -114,17 +122,16 @@ public class POSServiceTest {
     @Test
     public void findItemBySKU_withManyMatches(){
         when(posService.findItemBySKU("0284005")).thenCallRealMethod();
-        assertEquals(2, posService.findItemBySKU("0284005").get().size());
+        assertEquals(Arrays.asList(new Item[]{item1, item2}), posService.findItemBySKU("0284005").get());
+
     }
 
     @Test
     public void findItemBySKU_withNoMatches(){
-        when(posService.findItemBySKU(String.valueOf(Integer.MIN_VALUE))).thenCallRealMethod();
+        when(posService.findItemBySKU("999999")).thenCallRealMethod();
 
-        assertThrows(
-                SKUNotFoundException.class,
-                () -> posService.findItemBySKU(String.valueOf(Integer.MIN_VALUE))
-        );
+        final Optional<List<Item>> itemBySKU = posService.findItemBySKU("999999");
+        assertEquals(Optional.empty(), itemBySKU);
     }
 
     @Test

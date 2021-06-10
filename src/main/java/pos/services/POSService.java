@@ -21,7 +21,7 @@ public interface POSService {
      * @throws URISyntaxException
      * @throws IOException
      */
-    public Map<String, Map<String, Item>> getItems() throws URISyntaxException, IOException;
+    public Map<String, List<Item>> getItems() throws URISyntaxException, IOException;
 
     /**
      * Gets {@link Set} of {@link Command}s

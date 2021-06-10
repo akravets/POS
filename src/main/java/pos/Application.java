@@ -13,7 +13,7 @@ import org.springframework.core.io.FileSystemResource;
 import pos.commands.AbstractCommand;
 import pos.commands.Command;
 import pos.commands.ExitCommand;
-import pos.commands.ListItemsCommand;
+import pos.commands.ListPOSCommandsCommand;
 import pos.exception.CommandException;
 import pos.helpers.POSHelper;
 import pos.models.Item;
@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 @Slf4j
@@ -48,7 +47,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if(args.length == 0){
-            log.warn("No data file specified on application start");
+            log.debug("No data file specified on application start");
             System.out.println("CSV data file must be specified");
             return;
         }
@@ -76,17 +75,14 @@ public class Application implements CommandLineRunner {
 
         if(exceptionSet.size() != 0){
             System.out.println("Following warnings occurred while loading data:\n");
-            log.debug("Errors while parsing data file");
             for (CsvException csvException : exceptionSet) {
+                log.debug(csvException.toString());
                 System.out.println("\t"+csvException.toString());
-                log.warn(csvException.toString());
             }
             System.out.println("\nBad data was removed during import\n");
         }
 
-        //Map<String, List<Item>> data = POSUtility.groupData(items);
-
-        Map<String, Map<String, Item>> data = POSUtility.groupData(items);
+        Map<String, List<Item>> data = POSUtility.groupData(items);
 
         dataProvider.setItems(data);
 
@@ -102,7 +98,7 @@ public class Application implements CommandLineRunner {
             log.debug("Command entered: " + input);
 
             Optional<AbstractCommand> commandByCode = posService.getCommandByCode(input);
-            Command command = commandByCode.orElse(new ListItemsCommand(posService, posHelper));
+            Command command = commandByCode.orElse(new ListPOSCommandsCommand(posService, posHelper));
 
             try{
                 if(command instanceof ExitCommand){
@@ -111,7 +107,7 @@ public class Application implements CommandLineRunner {
                 command.execute(input);
             } catch (CommandException | IllegalArgumentException e){
                 System.out.println(e.getMessage());
-                log.warn("Exception while getting input from user " + e.getMessage());
+                log.debug("Exception while getting input from user " + e.getMessage());
                 continue;
             }
         }

@@ -26,7 +26,7 @@ public class POSConfiguration {
         HashMap<String, AbstractCommand> commandMap = new LinkedHashMap<>();
 
         AbstractCommand exitCommand = new ExitCommand(posService, getPOSHelper());
-        AbstractCommand listCommand = new ListItemsCommand(posService, getPOSHelper());
+        AbstractCommand listCommand = new ListPOSCommandsCommand(posService, getPOSHelper());
         AbstractCommand skuLookupCommand = new SKULookupCommand(posService, getPOSHelper(), purchase);
         AbstractCommand totalCommand = new TotalCommand(posService, getPOSHelper(), purchase);
 

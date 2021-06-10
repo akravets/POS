@@ -11,7 +11,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class POSUtility {
-    public static Map<String, Map<String, Item>> groupData(List<Item> items){
-        return items.stream().collect(Collectors.groupingBy(s -> s.getSku().substring(0, 3), Collectors.toMap(s -> s.getSku(), Function.identity())));
+    public static Map<String, List<Item>> groupData(List<Item> items){
+        return items.stream().collect(Collectors.groupingBy(s -> s.getSku().substring(0, 3)));
+        //return items.stream().collect(Collectors.groupingBy(s -> s.getSku().substring(0, 3), Collectors.toMap(s -> s.getSku(), Function.identity())));
     }
 }

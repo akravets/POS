@@ -30,13 +30,13 @@ public class TaxForItemFunctionTest {
     @Test
     public void testAppyTaxStateAndGroceryItem(){
         Double result = taxForItemFunction.apply(TaxRate.STATE, groceryItem);
-        Assertions.assertEquals(1.00, result.doubleValue());
+        Assertions.assertEquals(0.00, result.doubleValue());
     }
 
     @Test
     public void testAppyTaxCountyAndGroceryItem(){
         Double result = taxForItemFunction.apply(TaxRate.COUNTY, groceryItem);
-        Assertions.assertEquals(1.00, result.doubleValue());
+        Assertions.assertEquals(0.00, result.doubleValue());
     }
 
     @Test

@@ -5,8 +5,8 @@ import pos.helpers.POSHelper;
 import pos.services.POSService;
 
 @Component
-public class ListItemsCommand extends AbstractCommand {
-    public ListItemsCommand(POSService service, POSHelper posHelper){
+public class ListPOSCommandsCommand extends AbstractCommand {
+    public ListPOSCommandsCommand(POSService service, POSHelper posHelper){
         super(service, posHelper);
     }
 
