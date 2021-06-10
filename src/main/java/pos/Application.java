@@ -84,7 +84,9 @@ public class Application implements CommandLineRunner {
             System.out.println("\nBad data was removed during import\n");
         }
 
-        Map<String, List<Item>> data = POSUtility.groupData(items);
+        //Map<String, List<Item>> data = POSUtility.groupData(items);
+
+        Map<String, Map<String, Item>> data = POSUtility.groupData(items);
 
         dataProvider.setItems(data);
 

@@ -54,10 +54,12 @@ public class TotalCommand extends AbstractCommand {
         System.out.println("==================================================");
         System.out.println(pad(20, "Subtotal") + format(subTotal));
 
+        System.out.println("");
         groupedTaxRateMap.forEach((k,v) -> {
             System.out.print(pad(20, k.getName()));
             System.out.println(pad(20, format(v)));
         });
+        System.out.println("");
 
         System.out.println(pad(20, "Total") + format(total));
 
@@ -74,6 +76,8 @@ public class TotalCommand extends AbstractCommand {
 
         System.out.println(pad(20, "Payment Paid") + format(paymentAmount));
         System.out.println(pad(20, "Change Due") + format(paymentAmount - total));
+
+        System.out.println("Press 'l' to come back to main screen");
 
         purchase.getItems().clear();
     }

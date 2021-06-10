@@ -3,9 +3,9 @@ package pos.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pos.exception.SKUNotFoundException;
 import pos.functions.TaxForItemFunction;
 import pos.commands.AbstractCommand;
-import pos.helpers.POSHelper;
 import pos.provider.CommandProvider;
 import pos.models.Item;
 import pos.models.TaxRate;
@@ -27,7 +27,7 @@ public class POSServiceImpl implements POSService {
     DataProvider dataProvider;
 
     @Override
-    public Map<String, List<Item>> getItems() throws URISyntaxException, IOException {
+    public Map<String, Map<String, Item>> getItems() throws URISyntaxException, IOException {
         return dataProvider.getItems();
     }
 
@@ -44,22 +44,21 @@ public class POSServiceImpl implements POSService {
     @Override
     public Optional<List<Item>> findItemBySKU(String sku) {
         try {
-            Map<String, List<Item>> items = getItems();
+            final Map<String, Map<String, Item>> items = getItems();
 
             // if sku entered is less than 12 characters, find our bucket by first 3 characters and return
             // its list
-            if (sku.length() < 12) {
-                return Optional.ofNullable(items.get(sku.substring(0, 3)));
+            Map<String, Item> values = items.get(sku.substring(0, 3));
+
+            if(values == null){
+                throw new SKUNotFoundException(sku);
             }
-
-            // otherwise get list in our bucket
-            List<Item> itemList = items.get(sku.substring(0, 3));
-
-            // iterate through the list until we find our sku
-            return Optional.of(itemList.stream().
-                    filter(x -> x.getSku().equals(sku))
-                    .collect(Collectors.toList()));
-
+            if (sku.length() < 12) {
+                List<Item> list = new ArrayList<Item>(values.values());
+                return Optional.ofNullable(list);
+            }
+            // otherwise get the Item directly
+            return Optional.of(Arrays.asList(new Item[]{values.get(sku)}));
         } catch (URISyntaxException | IOException e) {
             log.error("Error finding sku " + sku, e);
             return Optional.empty();

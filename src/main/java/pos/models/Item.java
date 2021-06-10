@@ -10,7 +10,7 @@ import lombok.Value;
  */
 @NoArgsConstructor
 @Data
-public class Item {
+public class Item implements Comparable<Item> {
     @CsvBindByPosition(position = 0)
     private String sku;
     @CsvBindByPosition(position = 1)
@@ -19,4 +19,14 @@ public class Item {
     private double price;
     @CsvBindByPosition( position = 3)
     private TaxCategory taxCategory;
+
+    @Override
+    public int compareTo(Item item) {
+        int i = item.getSku().compareTo(getSku());
+        if(i < 0)
+            return 1;
+        if(i > 0)
+            return -1;
+        return 0;
+    }
 }
