@@ -43,12 +43,21 @@ public class POSServiceImpl implements POSService {
     }
 
     @Override
-    public Optional<List<Item>> findItemBySKU(String sku) throws SKUNotFoundException{
+    public Optional<List<Item>> findItemBySKU(String sku) throws SKUNotFoundException {
         try {
-            final  Map<String, List<Item>> items = getItems();
+            final Map<String, List<Item>> items = getItems();
 
             if (sku.length() < 12) {
-                return Optional.ofNullable(items.get(sku.substring(0, 3)));
+                if (sku.length() == 3) {
+                    return Optional.ofNullable(items.get(sku.substring(0, 3)));
+                }
+                final Optional<List<Item>> itemList = Optional.ofNullable(items.get(sku.substring(0, 3)));
+
+                itemList.orElseThrow(() -> new SKUNotFoundException(sku));
+
+                List<Item> list = itemList.get();
+
+                return Optional.ofNullable(list.stream().filter(x -> x.getSku().startsWith(sku)).collect(Collectors.toList()));
             }
             // otherwise get list in our bucket
             List<Item> itemList = items.get(sku.substring(0, 3));
@@ -66,7 +75,7 @@ public class POSServiceImpl implements POSService {
 
     @Override
     public Map<Item, Map<TaxRate, Double>> getTaxForEachItem(List<Item> items) {
-      return getTaxForItemsByTaxRate(items);
+        return getTaxForItemsByTaxRate(items);
     }
 
     @Override
@@ -89,16 +98,15 @@ public class POSServiceImpl implements POSService {
 
         map.entrySet().forEach(x -> {
             Map<TaxRate, Double> value = x.getValue();
-            for(Map.Entry<TaxRate, Double> entry : value.entrySet() ){
+            for (Map.Entry<TaxRate, Double> entry : value.entrySet()) {
                 TaxRate k = entry.getKey();
                 Double v = entry.getValue();
 
                 Double taxValue = taxMap.get(k);
 
-                if(taxValue == null){
+                if (taxValue == null) {
                     taxMap.put(k, v);
-                }
-                else{
+                } else {
                     taxMap.put(k, taxValue + v);
                 }
             }
@@ -107,12 +115,12 @@ public class POSServiceImpl implements POSService {
         return taxMap;
     }
 
-    private Map<Item, Map<TaxRate, Double>> getTaxForItemsByTaxRate(List<Item> items){
+    private Map<Item, Map<TaxRate, Double>> getTaxForItemsByTaxRate(List<Item> items) {
         TaxForItemFunction function = new TaxForItemFunction();
 
         Map<Item, Map<TaxRate, Double>> taxMap = new LinkedHashMap<>();
 
-        for(Item item : items){
+        for (Item item : items) {
             Map<TaxRate, Double> map = new LinkedHashMap<>();
             map.put(TaxRate.CITY, function.apply(TaxRate.CITY, item));
             map.put(TaxRate.STATE, function.apply(TaxRate.STATE, item));

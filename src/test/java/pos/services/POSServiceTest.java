@@ -121,8 +121,8 @@ public class POSServiceTest {
 
     @Test
     public void findItemBySKU_withManyMatches(){
-        when(posService.findItemBySKU("0284005")).thenCallRealMethod();
-        assertEquals(Arrays.asList(new Item[]{item1, item2}), posService.findItemBySKU("0284005").get());
+        when(posService.findItemBySKU("028400")).thenCallRealMethod();
+        assertEquals(Arrays.asList(new Item[]{item1, item2}), posService.findItemBySKU("028400").get());
 
     }
 
@@ -130,8 +130,9 @@ public class POSServiceTest {
     public void findItemBySKU_withNoMatches(){
         when(posService.findItemBySKU("999999")).thenCallRealMethod();
 
-        final Optional<List<Item>> itemBySKU = posService.findItemBySKU("999999");
-        assertEquals(Optional.empty(), itemBySKU);
+        assertThrows(SKUNotFoundException.class,
+                () -> posService.findItemBySKU("999999")
+        );
     }
 
     @Test
